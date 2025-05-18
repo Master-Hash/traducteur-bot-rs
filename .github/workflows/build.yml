@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  # workflow_dispatch:
+  push:
+    branches:
+      - master
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - uses: supplypike/setup-bin@v4
+        with:
+          uri: "https://github.com/WebAssembly/binaryen/releases/download/version_123/binaryen-version_123-aarch64-linux.tar.gz"
+          name: "wasm-opt"
+          version: "123"
+          subPath: "binaryen-version_123/bin"
+
+      - name: Show version information (Rust, cargo)
+        run: |
+          rustup -V
+          rustup toolchain list
+          rustup target add wasm32-unknown-unknown
+          cargo -V
+          rustc -V
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

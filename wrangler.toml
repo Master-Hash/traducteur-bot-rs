@@ -1,0 +1,12 @@
+name = "traducteur-bot-rs"
+main = "build/worker/shim.mjs"
+compatibility_date = "2025-05-18"
+
+route = { pattern = "traducteur.hash.memorial", custom_domain = true }
+workers_dev = false
+
+[build]
+command = "worker-build --release && wasm-opt ./build/worker/index.wasm -o ./build/worker/index.wasm -O4 --dce --enable-simd --enable-bulk-memory --enable-reference-types --enable-multimemory"
+
+[observability.logs]
+enabled = true

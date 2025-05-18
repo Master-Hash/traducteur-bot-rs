@@ -1,0 +1,35 @@
+[package]
+name = "traducteur_bot_rs"
+version = "0.1.0"
+edition = "2024"
+authors = ["Master-Hash <hash@hash.memorial>"]
+
+[package.metadata.release]
+release = false
+
+# https://github.com/rustwasm/wasm-pack/issues/1247
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+worker = { version = "0.5.0", features = ['http', 'axum'] }
+worker-macros = { version = "0.5.0", features = ['http'] }
+axum = { version = "0.7", default-features = false, features = ["json"] }
+tower-service = "0.3.2"
+console_error_panic_hook = { version = "0.1.1" }
+frankenstein = { version = "0.40.0", features = [
+    "client-reqwest",
+    "trait-async",
+] }
+futures-util = "0.3.31"
+reqwest = { version = "0.12.15", default-features = false, features = ["json"] }
+js-sys = "0.3.77"
+serde = "1.0.219"
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1
