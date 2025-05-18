@@ -39,8 +39,8 @@ async fn handle_echo(
     match update.content {
         UpdateContent::Message(message) => {
             if let Some(text) = message.text {
-                if text == "/version" {
-                    let response = "tgbot-worker-rs version: 0.1.0".to_string();
+                if text.contains("/version") {
+                    let response = "traducteur-bot-rs version: 0.1.0".to_string();
                     let reply = SendMessageParams::builder()
                         .chat_id(message.chat.id)
                         .text(response)
@@ -54,7 +54,7 @@ async fn handle_echo(
                         }
                     }
                 }
-                if text.starts_with("/translate") {
+                if text.contains("/translate") {
                     let contains_zh = contains_zh(&text);
                     if contains_zh {
                         return (StatusCode::OK, "");
