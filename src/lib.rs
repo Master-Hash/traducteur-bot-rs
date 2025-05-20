@@ -5,9 +5,10 @@ use axum::{Router, routing::get};
 use frankenstein::AsyncTelegramApi;
 use frankenstein::client_reqwest::Bot;
 use frankenstein::methods::SendMessageParams;
+use frankenstein::types::ReplyParameters;
 use frankenstein::updates::Update;
 use frankenstein::updates::UpdateContent;
-use js_sys::RegExp;
+use js_sys::{Math, RegExp};
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -24,7 +25,7 @@ struct DeeplxResponse {
     // code: u16,
     // message: String,
     data: String,
-    // source_lang: String,
+    source_lang: String,
     // target_lang: String,
     // alternatives: Option<Vec<String>>,
 }
@@ -61,25 +62,56 @@ async fn handle_echo(
                     }
                     let _t = text.replacen("/translate", "", 1);
                     let to_be_translated = _t.trim();
-                    let mut params = HashMap::new();
-                    // It seems that no source_lang is all right
-                    params.insert("text", to_be_translated);
-                    params.insert("target_lang", "ZH");
 
-                    let res = Client::new()
-                        .post(&state.backend_url)
-                        .json(&params)
-                        .send()
-                        .await;
+                    let rn = (Math::random() * 10.0).floor() as u8;
+
+                    let res = {
+                        if rn == 0 {
+                            let mut params = HashMap::new();
+                            // It seems that no source_lang is all right
+                            params.insert("text", to_be_translated);
+                            params.insert("target_lang", "ZH");
+
+                            Client::new()
+                                .post(&state.backend_url)
+                                .json(&params)
+                                .send()
+                                .await
+                        } else {
+                            Client::new()
+                                .post("https://translate-pa.googleapis.com/v1/translateHtml")
+                                .body(format!(
+                                    "[[[\"{}\"],\"auto\",\"zh-CN\"],\"te_lib\"]",
+                                    to_be_translated
+                                ))
+                                .send()
+                                .await
+                        }
+                    };
 
                     match res {
                         Ok(response) => {
+                            let r = ReplyParameters::builder()
+                                .message_id(message.message_id)
+                                .build();
                             if response.status().is_success() {
-                                let translated_text =
-                                    response.json::<DeeplxResponse>().await.unwrap();
+                                let translated_text = {
+                                    if rn == 0 {
+                                        let r = response.json::<DeeplxResponse>().await.unwrap();
+                                        (r.data, r.source_lang)
+                                    } else {
+                                        let r = response.json::<Vec<Vec<String>>>().await.unwrap();
+                                        let mut a = r.into_iter().flatten();
+                                        (a.next().unwrap(), a.next().unwrap())
+                                    }
+                                };
                                 let reply = SendMessageParams::builder()
                                     .chat_id(message.chat.id)
-                                    .text(translated_text.data)
+                                    .reply_parameters(r)
+                                    .text(format!(
+                                        "{}\n\n原文语言: {}\n\nrn = {}",
+                                        translated_text.0, translated_text.1, rn
+                                    ))
                                     .build();
                                 match bot.send_message(&reply).await {
                                     Ok(_) => {
@@ -91,6 +123,12 @@ async fn handle_echo(
                                 }
                             } else {
                                 console_error!("Error from backend: {}", response.status());
+                                let reply = SendMessageParams::builder()
+                                    .chat_id(message.chat.id)
+                                    .reply_parameters(r)
+                                    .text(format!("Error from backend: {}", response.status()))
+                                    .build();
+                                bot.send_message(&reply).await.unwrap();
                             }
                         }
                         Err(e) => {
