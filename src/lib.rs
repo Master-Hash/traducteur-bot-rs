@@ -86,8 +86,11 @@ async fn handle_echo(
                                 ))
                                 .header(
                                     reqwest::header::CONTENT_TYPE,
-                                    reqwest::header::HeaderValue::from_static("application/json"),
+                                    reqwest::header::HeaderValue::from_static(
+                                        "application/json+protobuf",
+                                    ),
                                 )
+                                .header("x-goog-api-key", &state.google_api_key)
                                 .send()
                                 .await
                         }
@@ -154,15 +157,17 @@ async fn handle_echo(
 struct AppState {
     bot_token: String,
     backend_url: String,
+    google_api_key: String,
 }
 
-fn router(bot_token: String, backend_url: String) -> Router {
+fn router(bot_token: String, backend_url: String, google_api_key: String) -> Router {
     Router::new()
         .route("/", get(root))
         .route("/telegramMessage", post(handle_echo))
         .with_state(Arc::new(AppState {
             bot_token,
             backend_url,
+            google_api_key,
         }))
 }
 
@@ -192,7 +197,18 @@ async fn fetch(
                 .map_err(|e| worker::Error::from(e.to_string()));
         }
     };
-    Ok(router(bot_token, backend_url).call(req).await?)
+    let google_api_key = match _env.secret("GOOGLE_API_KEY") {
+        Ok(secret) => secret.to_string(),
+        Err(_) => {
+            return axum::http::Response::builder()
+                .status(500)
+                .body("GOOGLE_API_KEY not found".into())
+                .map_err(|e| worker::Error::from(e.to_string()));
+        }
+    };
+    Ok(router(bot_token, backend_url, google_api_key)
+        .call(req)
+        .await?)
 }
 
 fn contains_zh(text: &str) -> bool {
