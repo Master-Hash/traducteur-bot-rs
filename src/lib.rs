@@ -84,6 +84,10 @@ async fn handle_echo(
                                     "[[[\"{}\"],\"auto\",\"zh-CN\"],\"te_lib\"]",
                                     to_be_translated
                                 ))
+                                .header(
+                                    reqwest::header::CONTENT_TYPE,
+                                    reqwest::header::HeaderValue::from_static("application/json"),
+                                )
                                 .send()
                                 .await
                         }
@@ -126,7 +130,11 @@ async fn handle_echo(
                                 let reply = SendMessageParams::builder()
                                     .chat_id(message.chat.id)
                                     .reply_parameters(r)
-                                    .text(format!("Error from backend: {}", response.status()))
+                                    .text(format!(
+                                        "Error from backend: {}\n\nrn = {}",
+                                        response.status(),
+                                        rn
+                                    ))
                                     .build();
                                 bot.send_message(&reply).await.unwrap();
                             }
