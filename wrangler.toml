@@ -6,7 +6,7 @@ route = { pattern = "traducteur.hash.memorial", custom_domain = true }
 workers_dev = false
 
 [build]
-command = "worker-build --release && wasm-opt ./build/worker/index.wasm -o ./build/worker/index.wasm -O4 --dce --enable-simd --enable-bulk-memory --enable-reference-types --enable-multimemory"
+command = "worker-build --release && wasm-opt ./build/worker/index.wasm -o ./build/worker/index.wasm -O4 --dce --enable-simd --enable-bulk-memory --enable-reference-types --enable-multimemory --enable-nontrapping-float-to-int"
 
 [observability.logs]
 enabled = true
