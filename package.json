@@ -10,9 +10,9 @@
   },
   "keywords": [ ],
   "author": "",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.12.4",
   "devDependencies": {
-    "esbuild": "^0.25.4",
-    "wrangler": "^4.15.2"
+    "esbuild": "^0.25.5",
+    "wrangler": "^4.22.0"
   }
 }
