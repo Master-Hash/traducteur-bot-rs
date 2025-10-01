@@ -27,10 +27,10 @@ jobs:
 
       - uses: supplypike/setup-bin@v5
         with:
-          uri: "https://github.com/WebAssembly/binaryen/releases/download/version_123/binaryen-version_123-aarch64-linux.tar.gz"
+          uri: "https://github.com/WebAssembly/binaryen/releases/download/version_124/binaryen-version_124-aarch64-linux.tar.gz"
           name: "wasm-opt"
-          version: "123"
-          subPath: "binaryen-version_123/bin"
+          version: "124"
+          subPath: "binaryen-version_124/bin"
 
       - name: Show version information (Rust, cargo)
         run: |
