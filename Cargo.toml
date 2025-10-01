@@ -15,17 +15,17 @@ wasm-opt = false
 crate-type = ["cdylib"]
 
 [dependencies]
-worker = { version = "0.6.0", features = ['http', 'axum'] }
+worker = { version = "0.6.1", features = ['http', 'axum'] }
 worker-macros = { version = "0.6.0", features = ['http'] }
 axum = { version = "0.8", default-features = false, features = ["json"] }
 tower-service = "0.3.2"
 console_error_panic_hook = { version = "0.1.1" }
-frankenstein = { version = "0.41.0", features = [
+frankenstein = { version = "0.45.0", features = [
     "client-reqwest",
     "trait-async",
 ] }
 futures-util = "0.3.31"
-reqwest = { version = "0.12.21", default-features = false, features = ["json"] }
+reqwest = { version = "0.12.23", default-features = false, features = ["json"] }
 js-sys = "0.3.77"
 serde = "1.0.219"
 
