@@ -13,6 +13,6 @@
   "packageManager": "pnpm@10.12.4",
   "devDependencies": {
     "esbuild": "^0.25.10",
-    "wrangler": "^4.40.3"
+    "wrangler": "^4.45.1"
   }
 }
