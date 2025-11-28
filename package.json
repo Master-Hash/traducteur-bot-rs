@@ -8,11 +8,11 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },
-  "keywords": [ ],
+  "keywords": [],
   "author": "",
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.24.0",
   "devDependencies": {
-    "esbuild": "^0.25.11",
-    "wrangler": "^4.45.1"
+    "esbuild": "^0.27.0",
+    "wrangler": "^4.51.0"
   }
 }

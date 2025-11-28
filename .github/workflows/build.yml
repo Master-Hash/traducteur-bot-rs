@@ -53,9 +53,11 @@ jobs:
         run: pnpm install
       - uses: taiki-e/install-action@v2
         with:
-          tool: worker-build
+          tool: worker-build,wasm-bindgen@0.2.106
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        env:
+          WASM_BINDGEN_BIN: /home/runner/.cargo/bin/wasm-bindgen
