@@ -53,7 +53,7 @@ jobs:
         run: pnpm install
       - uses: taiki-e/install-action@v2
         with:
-          tool: worker-build,wasm-bindgen@0.2.106
+          tool: worker-build,wasm-bindgen@0.2.108
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:

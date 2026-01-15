@@ -2,7 +2,6 @@
 name = "traducteur_bot_rs"
 version = "0.1.0"
 edition = "2024"
-authors = ["Master-Hash <hash@hash.memorial>"]
 
 [package.metadata.release]
 release = false
