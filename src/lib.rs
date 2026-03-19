@@ -56,21 +56,26 @@ async fn handle_echo(
                     }
                 }
                 if text.contains("/translate") {
-                    let contains_zh = contains_zh(&text);
+                    let to_be_translated;
+                    if let Some(reply_text) = message.reply_to_message.and_then(|msg| msg.text) {
+                        to_be_translated = reply_text.trim().to_owned();
+                    } else {
+                        to_be_translated = text.replacen("/translate", "", 1).trim().to_owned();
+                    }
+
+                    let contains_zh = contains_zh(&to_be_translated);
                     if contains_zh {
                         return (StatusCode::OK, "");
                     }
-                    let _t = text.replacen("/translate", "", 1);
-                    let to_be_translated = _t.trim();
 
-                    let rn = (Math::random() * 10.0).floor() as u8;
+                    let rn = (Math::random() * 100.0).floor() as u8;
 
                     let res = {
                         if rn == 0 {
                             let mut params = HashMap::new();
                             // It seems that no source_lang is all right
                             params.insert("text", to_be_translated);
-                            params.insert("target_lang", "ZH");
+                            params.insert("target_lang", "ZH".to_string());
 
                             Client::new()
                                 .post(&state.backend_url)
