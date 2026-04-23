@@ -1,11 +1,11 @@
 name = "traducteur-bot-rs"
 main = "build/worker/shim.mjs"
-compatibility_date = "2025-11-21"
+compatibility_date = "2026-04-21"
 route = { pattern = "traducteur.hash.moe", custom_domain = true }
 workers_dev = false
 
 [build]
-command = "worker-build --no-opt --release && wasm-opt ./build/index_bg.wasm -o ./build/index_bg.wasm -O4 --dce --enable-simd --enable-bulk-memory --enable-reference-types --enable-multimemory --enable-nontrapping-float-to-int"
+command = "worker-build --no-opt --release --panic-unwind && wasm-opt ./build/index_bg.wasm -o ./build/index_bg.wasm -O4 --dce --enable-simd --enable-bulk-memory --enable-reference-types --enable-multimemory --enable-nontrapping-float-to-int --emit-exnref --translate-to-exnref"
 
 [observability.logs]
 enabled = true
