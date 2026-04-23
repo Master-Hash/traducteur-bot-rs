@@ -1,5 +1,5 @@
 name = "traducteur-bot-rs"
-main = "build/worker/shim.mjs"
+main = "build/index.js"
 compatibility_date = "2026-04-21"
 route = { pattern = "traducteur.hash.moe", custom_domain = true }
 workers_dev = false

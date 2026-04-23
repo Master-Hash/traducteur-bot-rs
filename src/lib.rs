@@ -182,8 +182,6 @@ async fn fetch(
     _env: Env,
     _ctx: Context,
 ) -> Result<axum::http::Response<axum::body::Body>> {
-    console_error_panic_hook::set_once();
-
     let bot_token = match _env.secret("BOT_TOKEN") {
         Ok(secret) => secret.to_string(),
         Err(_) => {
