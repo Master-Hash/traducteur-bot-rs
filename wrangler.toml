@@ -5,7 +5,7 @@ route = { pattern = "traducteur.hash.moe", custom_domain = true }
 workers_dev = false
 
 [build]
-command = "worker-build --no-opt --release --panic-unwind && wasm-opt ./build/index_bg.wasm -o ./build/index_bg.wasm -O4 --dce --enable-simd --enable-bulk-memory --enable-reference-types --enable-multimemory --enable-nontrapping-float-to-int --emit-exnref --translate-to-exnref"
+command = "worker-build --release --panic-unwind"
 
 [observability.logs]
 enabled = true
