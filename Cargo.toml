@@ -18,7 +18,7 @@ worker = { version = "0.8.1", features = ['http', 'axum'] }
 worker-macros = { version = "0.8.1", features = ['http'] }
 axum = { version = "0.8", default-features = false, features = ["json"] }
 tower-service = "0.3.2"
-frankenstein = { version = "0.49.0", features = [
+frankenstein = { version = "0.50.0", features = [
     "client-reqwest",
     "trait-async",
 ] }
