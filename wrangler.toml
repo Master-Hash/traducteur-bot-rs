@@ -1,6 +1,6 @@
 name = "traducteur-bot-rs"
 main = "build/index.js"
-compatibility_date = "2026-04-21"
+compatibility_date = "2026-07-06"
 route = { pattern = "traducteur.hash.moe", custom_domain = true }
 workers_dev = false
 
